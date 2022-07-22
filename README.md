@@ -16,7 +16,7 @@ This will create a react application and it will be up and running on your local
 
 Now, let's open up this project with a text editor. We have used vs-code as our text editor for this project, but you can use any text editor you want. Once done this is how it should look like: 
 
-![New React App](../resources/screenshots/Sample-Asset-1.png)
+![New React App](src/resources/screenshots/Sample-Asset-1.png)
 
 Now, let us quickly setup a form in our our react project. The data from this form will be used for accepting the params which is required for minting a new NFT, and then we will use SHYFT's create API to mint a new NFT. 
 Inside the `App.js` Component, we create the html(JSX) form as per the parameters required for the create API.
