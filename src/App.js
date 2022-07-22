@@ -5,20 +5,17 @@ import React, { useState } from "react";
 import axios from "axios";
 import disPic from './resources/images/upload-file.jpg';
 
+const xApiKey = "6YYVFYSK7PlguTsB";
+
 function App() {
   const [file, setfile] = useState();
-  const [displayPic, setDisplayPic] = useState(disPic);
   const [network, setnetwork] = useState("devnet");
   const [privKey, setprivKey] = useState();
-  const [xApiKey, setXAPI] = useState("6YYVFYSK7PlguTsB");
   const [name, setName] = useState();
   const [symbol, setSymbol] = useState();
   const [desc, setDesc] = useState();
   const [attr, setAttr] = useState();
   const [extUrl, setExtUrl] = useState();
-  const [maxSup, setMaxSup] = useState();
-  const [roy, setRoy] = useState();
-
   const [status, setStatus] = useState("Awaiting Upload");
   const [dispResponse, setDispResp] = useState("");
 
@@ -32,8 +29,6 @@ function App() {
     formData.append("description", desc);
     formData.append("attributes", attr);
     formData.append("external_url", extUrl);
-    formData.append("max_supply", maxSup);
-    formData.append("royalty", roy);
     formData.append("file", file);
 
     axios({
@@ -66,17 +61,11 @@ function App() {
 
   return (
     <div className="App">
-      <img
-        src={displayPic}
-        alt="To be uploaded"
-        style={{ height: "15%", width: "15%", objectFit: "cover" }}
-      />
       <form>
         <label htmlFor="file">Select File</label>
         <input name="file" type="file" onChange={(e) => {
           const [file_selected] = e.target.files;
           setfile(e.target.files[0]);
-          setDisplayPic(URL.createObjectURL(file_selected));
         }} />
         <br />
 
@@ -114,18 +103,20 @@ function App() {
         <input type="text" name="external_url" onChange={(e) => { setExtUrl(e.target.value) }} />
         <br />
 
-        <label htmlFor="max_supply">Max Supply (max_supply:number)</label>
-        <input type="number" name="max_supply" onChange={(e) => { setMaxSup(e.target.value) }} required />
-        <br />
-
-        <label htmlFor="royalty">Royalty (royalty:number)</label>
-        <input type="number" name="royalty" onChange={(e) => { setRoy(e.target.value) }} required />
-        <br />
-
         <button type="submiit" onClick={mintNow}>
           Submit
         </button>
       </form>
+
+      <textarea
+        className="form-control"
+        name=""
+        value={JSON.stringify(dispResponse)}
+        id=""
+        cols="30"
+        rows="10"
+      ></textarea>
+
     </div>
   );
 }
