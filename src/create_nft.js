@@ -81,7 +81,7 @@ const Create = () => {
 		let formData = new FormData();
 		formData.append("network", network);
 		formData.append("private_key", privKey);
-		formData.append("name", network);
+		formData.append("name", name);
 		formData.append("symbol", symbol);
 		formData.append("description", desc);
 		formData.append("attributes", attr);
