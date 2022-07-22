@@ -1,70 +1,182 @@
-# Getting Started with Create React App
+### Project #1: How to create an NFT?
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+All the development information regarding the project in this directory is listed here.
 
-## Available Scripts
+Create a sample React app. We have called our React app 'hello-shyft', but you can name yours anything you like. 
 
-In the project directory, you can run:
+Create React App is a comfortable environment for learning React, and is the best way to start building a new single-page application in React. Note that you’ll need to have Node >= 14.0.0 and npm >= 5.6 on your machine. 
 
-### `npm start`
+To create a project, run:
+```bash
+  npx create-react-app my-app
+  cd my-app
+  npm start
+```
+This will create a react application and it will be up and running on your local system at [localhost:3000](localhost:3000)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Now, let's open up this project with a text editor. We have used vs-code as our text editor for this project, but you can use any text editor you want. Once done this is how it should look like: 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![New React App](../resources/screenshots/Sample-Asset-1.png)
 
-### `npm test`
+Now, let us quickly setup a form in our our react project. The data from this form will be used for accepting the params which is required for minting a new NFT, and then we will use SHYFT's create API to mint a new NFT. 
+Inside the `App.js` Component, we create the html(JSX) form as per the parameters required for the create API.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```html
+<form>
+  <label htmlFor="file">Select File</label>
+  <input name="file" type="file" onChange={(e) => {}} />
+  <br />
 
-### `npm run build`
+  <label htmlFor="network">
+    Network <span>(network: string)</span>
+  </label>
+  <select name="network" onChange={(e) => {}}>
+    <option value="devnet">Devnet</option>
+    <option value="testnet">Testnet</option>
+    <option value="mainnet-beta">Mainnet Beta</option>
+  </select>
+  <br />
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  <label htmlFor="private_key">Private Key (private_key:string)</label>
+  <input type="text" name="private_key" onChange={(e) => {}} required />
+  <br />
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  <label htmlFor="xapikey">X API Key (x-api-key:string)</label>
+  <input type="text" onChange={(e) => {}} required />
+  <br />
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  <label htmlFor="name">Name (name:string)</label>
+  <input type="text" name="name" onChange={(e) => {}} required />
+  <br />
 
-### `npm run eject`
+  <label htmlFor="symbol">Symbol (symbol:string)</label>
+  <input type="text" name="symbol" onChange={(e) => {}} required />
+  <br />
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  <label htmlFor="desc">Description (description:string)</label>
+  <textarea name="desc" onChange={(e) => {}} required></textarea>
+  <br />
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  <label htmlFor="attributes">Attributes (attributes:string)</label>
+  <textarea name="attributes" onChange={(e) => {}} required></textarea>
+  <br />
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  <label htmlFor="external_url">External Url (external_url:string)</label>
+  <input type="text" name="external_url" onChange={(e) => {}} />
+  <br />
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  <label htmlFor="max_supply">Max Supply (max_supply:number)</label>
+  <input type="number" name="max_supply" onChange={(e) => {}} required />
+  <br />
 
-## Learn More
+  <label htmlFor="royalty">Royalty (royalty:number)</label>
+  <input type="number" name="royalty" onChange={(e) => {}} required />
+  <br />
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  <button type="submiit" onClick={() => {}}>
+    Submit
+  </button>
+</form>
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Now, we go on adding the variables for accepting the values, we use react's `useState` hook for state management in the React App. To import the `useState` hook we use the following code,
+```react
+import { useState } from "react";
+```
+and we create the variables with `useState` hook for state management of the variables. 
 
-### Code Splitting
+```react
+const [file, setfile] = useState();
+const [network, setnetwork] = useState("devnet");
+const [privKey, setprivKey] = useState();
+const [xApiKey, setXAPI] = useState();
+const [name, setName] = useState();
+const [symbol, setSymbol] = useState();
+const [desc, setDesc] = useState();
+const [attr, setAttr] = useState();
+const [extUrl, setExtUrl] = useState();
+const [maxSup, setMaxSup] = useState();
+const [roy, setRoy] = useState();
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Once done, we associate these variables to their respective input fields. For example, we associate the name field with the name input field, so that the state is updated as soon as the variable is updated.
+```react
+<input type="text" name="name" value={name} onChange={(e)=>setName(e.target.value)} required />
+```
+Now, we construct the `handleSubmit` function, which will run on form Sumbit. The API call will take place within this function. We use the `axios` package to handle the API calls(fetch can also be used).
 
-### Analyzing the Bundle Size
+To add the axios package to our project we run the following command:
+```bash 
+npm install axios
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+`Note: Whenever we add a new package to the project, install and then re-run the server`
 
-### Making a Progressive Web App
+This will install the axios package on your system and you will be able to use this inside your react app.
+The API we will use for minting the new NFT.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+https://api.shyft.to/sol/v1/nft/create
+```
+The API accepts form data as input, so after submission we create a new form and `append` all our form data collected from the form created above.
 
-### Advanced Configuration
+```react
+let formData = new FormData();
+formData.append("network",network);
+formData.append("private_key",privKey);
+formData.append("name",network);
+formData.append("symbol",symbol);
+formData.append("description",desc);
+formData.append("attributes",attr);
+formData.append("external_url",extUrl);
+formData.append("max_supply",maxSup);
+formData.append("royalty",roy);
+formData.append("file",file);
+```
+Note that we do not append the api key field as that data is used for authentication purposes.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+**Authentication**
 
-### Deployment
+To use the SHYFT APIs, we need to pass a special parameter in the header while request. The parameter is known as the 'x-api-key' and serves as an authorization for the API calls in SHYFT APIs. You can obtain your own shyft API key form the [SHYFT](https://shyft.to/get-api-key) website by registering your email with us.
+We will use the axios package to make this call.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```react
+axios({
+        url: "https://api.shyft.to/sol/v1/nft/create",
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "x-api-key": YOUR X API KEY,
+          Accept: "*/*",
+          "Access-Control-Allow-Origin": "*",
+        },
+        data: formData,
+      })
+        .then((res) => {
+          console.log(res);
+          // We can create a status variable and render this data in the page, or do anything else
+        })
+        .catch((err) => {
+          console.warn(err);
+          //Errors if any
+        });
+  }
+```
 
-### `npm run build` fails to minify
+So that's pretty much what we need. Once the request has been successfully submitted, we should get a sample response like so
+```bash
+{
+  "success": true,
+  "message": "NFT created successfully",
+  "result": {
+    "txId": "4qUvyoFd7dfbsdRWiXaTV9zdpCJS7ZAzXGQQET1cFcbaXJ1f539MnDbmKaGGxKDbaFjyJjSJ6UvDk5ytRPqfSPAb",
+    "mint": "DYitxNvtLxEsn2SChFfHMTCHhcZHgGhFnZeP8zSCof1X",
+    "metadata": "8hiAPEukZfWi7sMqZfzyNTmXyR4iGmLb5Z3QNz7CMXe3",
+    "edition": "9tV1QAsnbDtuvwZDpukoQzaJds7jHenXHZ5bRCrJ1gnU"
+  }
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Congratulations, You have successfully created an NFTs. You can clone and try out this code on your local system, or just write your own from scratch using our step by step approach.
+
+`Note: we have added a few minor css & styling files to our project, all the styling files are present in the resources folder.`
