@@ -5,13 +5,12 @@ import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
 import './resources/css/custom2.css';
 
 import disPic from './resources/images/upload-file.jpg';
-
+const xApiKey = ""
 const Create = () => {
 	const [file, setfile] = useState();
 	const [displayPic, setDisplayPic] = useState(disPic);
 	const [network, setnetwork] = useState("devnet");
 	const [privKey, setprivKey] = useState();
-	const [xApiKey, setXAPI] = useState('6YYVFYSK7PlguTsB');
 	const [name, setName] = useState();
 	const [symbol, setSymbol] = useState();
 	const [desc, setDesc] = useState();
@@ -25,56 +24,6 @@ const Create = () => {
 	const [dispResponse, setDispResp] = useState("");
 
 	const [connStatus, setConnStatus] = useState(true);
-
-	const mtmskConnect = async () => {
-		console.log('clicked meta mask');
-		const { ethereum } = window;
-
-		if (!ethereum) {
-			console.log("Please Install Meta Mask");
-		}
-
-		try {
-			const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-			console.log("Found An account: " + accounts[0]);
-			//setCurrentAccount(accounts);
-		}
-		catch (err) {
-			console.log(err);
-		}
-	}
-
-	const solanaConnect = async () => {
-		console.log('clicked solana connect');
-		const { solana } = window;
-		if (!solana) {
-			alert("Please Install Solana");
-		}
-
-		try {
-			//const network = "devnet";
-			const phantom = new PhantomWalletAdapter();
-			await phantom.connect();
-			const rpcUrl = clusterApiUrl(network);
-			const connection = new Connection(rpcUrl, "confirmed");
-			const wallet = {
-				address: phantom.publicKey.toString(),
-			};
-
-			if (wallet.address) {
-				console.log(wallet.address);
-				// setwallID(wallet.address);
-				// ReactSession.set("userw", wallet.address);
-				const accountInfo = await connection.getAccountInfo(new PublicKey(wallet.address), "confirmed");
-				console.log(accountInfo);
-				//document.getElementById("clsBtn").click();  
-			}
-		}
-		catch (err) {
-			console.log(err);
-		}
-
-	}
 
 	const mintNow = (e) => {
 		e.preventDefault();
