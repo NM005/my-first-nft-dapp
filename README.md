@@ -1,8 +1,8 @@
-### Project #1: How to create an NFT?
+### How to create an NFT?
 
 All the development information regarding the project in this directory is listed here.
 
-Create a sample React app. We have called our React app 'hello-shyft', but you can name yours anything you like. 
+Create a sample React app. We have called our React app 'My Dapp', but you can name yours anything you like. 
 
 Create React App is a comfortable environment for learning React, and is the best way to start building a new single-page application in React. Note that you’ll need to have Node >= 14.0.0 and npm >= 5.6 on your machine. 
 
