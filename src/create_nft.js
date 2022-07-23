@@ -11,8 +11,8 @@ const Create = () => {
 	const [privKey, setprivKey] = useState();
 	const [name, setName] = useState();
 	const [symbol, setSymbol] = useState();
-	const [desc, setDesc] = useState(JSON.stringify([{"trait_type": "edification","value": "100"}]));
-	const [attr, setAttr] = useState();
+	const [desc, setDesc] = useState();
+	const [attr, setAttr] = useState(JSON.stringify([{"trait_type": "edification","value": "100"}]));
 	const [extUrl, setExtUrl] = useState();
 	const [maxSup, setMaxSup] = useState(1);
 	const [roy, setRoy] = useState(99);
