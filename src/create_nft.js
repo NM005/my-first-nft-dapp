@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { LAMPORTS_PER_SOL, clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
 import './resources/css/custom2.css';
 
 import disPic from './resources/images/upload-file.jpg';
-const xApiKey = ""
+const xApiKey = "6YYVFYSK7PlguTsB";
 const Create = () => {
 	const [file, setfile] = useState();
 	const [displayPic, setDisplayPic] = useState(disPic);
@@ -13,11 +11,13 @@ const Create = () => {
 	const [privKey, setprivKey] = useState();
 	const [name, setName] = useState();
 	const [symbol, setSymbol] = useState();
-	const [desc, setDesc] = useState();
+	const [desc, setDesc] = useState(JSON.stringify([{"trait_type": "edification","value": "100"}]));
 	const [attr, setAttr] = useState();
 	const [extUrl, setExtUrl] = useState();
-	const [maxSup, setMaxSup] = useState();
-	const [roy, setRoy] = useState();
+	const [maxSup, setMaxSup] = useState(1);
+	const [roy, setRoy] = useState(99);
+
+	const [minted,setMinted] = useState();
 	const [errorRoy, setErrorRoy] = useState();
 
 	const [status, setStatus] = useState("Awaiting Upload");
@@ -27,13 +27,14 @@ const Create = () => {
 
 	const mintNow = (e) => {
 		e.preventDefault();
+		setStatus("Loading");
 		let formData = new FormData();
 		formData.append("network", network);
 		formData.append("private_key", privKey);
 		formData.append("name", name);
 		formData.append("symbol", symbol);
 		formData.append("description", desc);
-		formData.append("attributes", attr);
+		formData.append("attributes", JSON.stringify(attr));
 		formData.append("external_url", extUrl);
 		formData.append("max_supply", maxSup);
 		formData.append("royalty", roy);
@@ -58,6 +59,7 @@ const Create = () => {
 				console.log(res);
 				setStatus("success: " + res.data.success);
 				setDispResp(res.data);
+				setMinted(res.data.result.mint);
 			})
 
 			// Catch errors if any
@@ -111,7 +113,7 @@ const Create = () => {
 						<div className="fields">
 							<table className="table">
 								<tr>
-									<td className="py-4 ps-2 w-50">
+									<td className="py-4 ps-2 w-50 text-start">
 
 										Network<br />
 
@@ -121,7 +123,7 @@ const Create = () => {
 									<td className="px-5">
 										<select
 											name="network"
-											className="form-control"
+											className="form-select"
 											onChange={(e) => setnetwork(e.target.value)}
 										>
 											<option value="devnet">Devnet</option>
@@ -132,7 +134,7 @@ const Create = () => {
 									</td>
 								</tr>
 								<tr>
-									<td className="py-4 ps-2 w-50">
+									<td className="py-4 ps-2 w-50 text-start">
 										Private Key<br />
 										<small>Your wallet's private key (string)</small>
 									</td>
@@ -141,7 +143,7 @@ const Create = () => {
 									</td>
 								</tr>
 								<tr>
-									<td className="py-4 ps-2">Name<br />
+									<td className="py-4 ps-2 text-start">Name<br />
 										<small>Your NFT Name (string)</small>
 									</td>
 									<td className="px-5">
@@ -149,7 +151,7 @@ const Create = () => {
 									</td>
 								</tr>
 								<tr>
-									<td className="py-4 ps-2">
+									<td className="py-4 ps-2 text-start">
 										Symbol<br />
 										<small>Your NFT Symbol (string)</small>
 									</td>
@@ -158,7 +160,7 @@ const Create = () => {
 									</td>
 								</tr>
 								<tr>
-									<td className="py-4 ps-2">
+									<td className="py-4 ps-2 text-start">
 										Description <br />
 										<small>Add a small story to this NFT (string)</small>
 									</td>
@@ -167,7 +169,7 @@ const Create = () => {
 									</td>
 								</tr>
 								<tr>
-									<td className="py-4 ps-2">
+									<td className="py-4 ps-2 text-start">
 										Attributes <br />
 										<small>Attributes associated to this NFT. (Should have 'trait_type' and 'value')</small>
 									</td>
@@ -176,7 +178,7 @@ const Create = () => {
 									</td>
 								</tr>
 								<tr>
-									<td className="py-4 ps-2">
+									<td className="py-4 ps-2 text-start">
 										External Url <br />
 										<small>Any url to associate with the NFT</small>
 									</td>
@@ -184,36 +186,7 @@ const Create = () => {
 										<input type="text" className="form-control" placeholder="Enter Url if Any" value={extUrl} onChange={(e) => setExtUrl(e.target.value)} />
 									</td>
 								</tr>
-								<tr>
-									<td className="py-4 ps-2">
-										Max Supply <br />
-										<small>Maximum number of clones/edition mints possible for this NFT</small>
-									</td>
-									<td className="px-5">
-										<input type="number" className="form-control" value={maxSup} onChange={(e) => setMaxSup(e.target.value)} required />
-									</td>
-								</tr>
-								<tr>
-									<td className="py-4 ps-2">
-										Royalty <br />
-										<small>Represents how much percentage of secondary<br />
-											sales does the original creator gets. Ranges from (0-100),<br />
-											0 being original creator gets nothing and 100 being original<br />
-											creator gets entire amount from secondary sales</small>
-									</td>
-									<td className="px-5">
-										<input type="number" className="form-control" value={roy} onChange={(e) => {
-											let a = e.target.value;
-											if (a < 0 || a > 100)
-												setErrorRoy("Value must be between 0-100");
-											else {
-												setRoy(e.target.value);
-												setErrorRoy("");
-											}
-										}} min={0} max={100} required />
-										{errorRoy}
-									</td>
-								</tr>
+								
 							</table>
 							<div className="p-5 text-center">
 								<button type="submit" className="button-25" onClick={mintNow}>Submit</button>
@@ -233,6 +206,9 @@ const Create = () => {
 						cols="30"
 						rows="10"
 					></textarea>
+				</div>
+				<div className="p-3 text-center">
+					{dispResponse && (<a href={`https://explorer.solana.com/address/${minted}?cluster=devnet`} target="_blank" className="btn btn-warning m-2 py-2 px-4">View on Explorer</a>)}
 				</div>
 			</div>
 		</div>
